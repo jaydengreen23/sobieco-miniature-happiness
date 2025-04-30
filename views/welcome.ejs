@@ -9,16 +9,11 @@
 <body>
     <div id="profile-display" class="">
         <h2>Welcome, <%=profile.firstname %> <%=profile.lastname %>!</h2>
-        <button id="edit-btn">Edit Profile</button><br><br>
-        
-        <% if (registration) { %>
-            <!-- Restration Info -->
-          <button id="edit-registration-btn">Edit Registration</button>
-        <% } else { %>
-          <button id="start-registration-btn">Start Registration</button>
-        <% } %><br><br>
-        <button id="delete-btn">Delete Profile</button><br><br>
+        <a href="/edit-profile">
+        <button id="edit-btn">Edit Profile</button></a><br><br>
+        <form action="/delete-profile" method="POST" onsubmit="return confirm('Are you sure you want to delete your profile?');">
+          <button id="delete-btn">Delete Profile</button><br><br>
+        </form>
       </div>
-      <!-- <script src="scripts/scripts.js"></script> -->
 </body>
 </html>

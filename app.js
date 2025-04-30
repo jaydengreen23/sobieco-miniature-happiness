@@ -6,13 +6,20 @@ const bodyParser = require('body-parser')
 const { MongoClient, ServerApiVersion } = require('mongodb');
 const uri =process.env.MONGO_URI;
 const {ObjectId} = require('mongodb');
+const session = require('express-session');
 
 
 app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({extended: true}));
-app.use(express.static(__dirname + '/public'))
+app.use(express.static(__dirname + '/public'));
 
-//begin all my middle wares
+
+
+app.use(session({
+  secret: 'your-secret-key', // Replace with a strong secret in production
+  resave: false,
+  saveUninitialized: true
+}));
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
 const client = new MongoClient(uri, {
@@ -23,7 +30,6 @@ const client = new MongoClient(uri, {
   }
 });
 
-//const db = "vi-database";
 async function startServer() {
   try {
     await client.connect();
@@ -32,6 +38,13 @@ async function startServer() {
     const db = client.db("jaydenSobieProfile");
     const mongoCollection = db.collection("jaydenSobieCollection");
     const profilesCollection = db.collection("profiles");
+
+    app.use((req, res, next) => {
+      if (!req.session.userId) {
+        req.session.userId = 'test-user-123'; // or use a valid ObjectId string if needed
+      }
+      next();
+    })
 
 
 app.get('/', async function (req, res) {
@@ -53,7 +66,7 @@ app.post('/create-profile', async (req, res) => {
   }
 
   // Prepare the data to insert into MongoDB
-  const userId = 'example-id'; // TODO: Replace with actual session user later
+  const userId = req.session.userId;
   const profileData = {
     userId,
     firstname,
@@ -98,51 +111,28 @@ app.get('/welcome', async (req, res) => {
     res.send("Error loading welcome page.");
   }
 });
-//****************************************************** */
-//Registration form
-// Show the registration form
-app.get('/registration-form', (req, res) => {
-  res.render('registration-form');
-});
-
-// Handle registration form submission
-app.post('/registration-form', async (req, res) => {
-  const userId = 'example-id'; // replace with session user later
-  const data = {
-    userId,
-    firstTime: req.body['first-time'],
-    isStudent: req.body['is-student'],
-    submitResearch: req.body['submit-research'],
-    submissionTitle: req.body['submission-title'],
-    coAuthors: req.body['co-authors'],
-    abstract: req.body['abstract'],
-    researchArea: req.body['research-area'],
-    includeInProceedings: req.body['include-in-proceedings'],
-  };
+app.get('/edit-profile', async (req, res) => {
+  const userId = req.session.userId;
 
   try {
-    const registrationCollection = db.collection('registrations');
-    await registrationCollection.updateOne(
-      { userId },
-      { $set: data },
-      { upsert: true }
-    );
+    const profile = await profilesCollection.findOne({ userId });
 
-    res.redirect('/welcome');
+    if (!profile) {
+      return res.redirect('/create-profile');
+    }
+
+    // ✅ Pass both profile and message to the view
+    res.render('edit-profile', { profile, message: null });
   } catch (err) {
-    console.error('Error saving registration:', err);
-    res.status(500).send('Error saving registration.');
+    console.error('Error loading profile for edit:', err);
+    res.status(500).send('Error loading profile.');
   }
 });
-//****************************************************** */
-// Update profile
-app.post('/update-profile', async (req, res) => {
+app.post('/edit-profile', async (req, res) => {
   const userId = req.session.userId;
-  if (!userId) return res.redirect('/login');
 
   const updateFields = {
     firstname: req.body.firstname,
-    middlename: req.body.middlename,
     lastname: req.body.lastname,
     email: req.body.email,
     phone: req.body.phone,
@@ -153,15 +143,27 @@ app.post('/update-profile', async (req, res) => {
     zip: req.body.zip
   };
 
-  await db.collection('profiles').updateOne(
-    { userId },
-    { $set: updateFields },
-    { upsert: true }
-  );
+  await profilesCollection.updateOne({ userId }, { $set: updateFields });
 
-  res.redirect('/profile');
+  res.redirect('/welcome'); // or wherever you want to go after editing
 });
+app.post('/delete-profile', async (req, res) => {
+  const userId = req.session.userId;
 
+  try {
+    // Delete the profile and any related data
+    await profilesCollection.deleteOne({ userId });
+    await db.collection('registrations').deleteOne({ userId });
+
+    // Optionally destroy the session
+    req.session.destroy(() => {
+      res.redirect('/create-profile'); // Or redirect somewhere else
+    });
+  } catch (err) {
+    console.error('Error deleting profile:', err);
+    res.status(500).send('Failed to delete profile.');
+  }
+});
 
 app.listen(port, ()=> console.log(`server is running on .. ${port}`));
 } catch (err) {
