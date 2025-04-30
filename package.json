@@ -1,0 +1,30 @@
+{
+  "name": "sobieco-miniature-happiness",
+  "version": "1.0.0",
+  "description": "Here is all of my code and such for what I worked on along with screenshots \r And things working and when the user may try to enter in bad data or something not intended",
+  "main": "app.js",
+  "scripts": {
+    "dev": "nodemon app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jaydengreen23/sobieco-miniature-happiness.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/jaydengreen23/sobieco-miniature-happiness/issues"
+  },
+  "homepage": "https://github.com/jaydengreen23/sobieco-miniature-happiness#readme",
+  "dependencies": {
+    "body-parser": "^2.2.0",
+    "dotenv": "^16.5.0",
+    "ejs": "^3.1.10",
+    "express": "^5.1.0",
+    "mongodb": "^6.16.0",
+    "nodemon": "^3.1.10"
+  }
+}

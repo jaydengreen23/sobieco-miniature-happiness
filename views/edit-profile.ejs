@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <div id="edit-form" class="hidden">
+    <div id="edit-form-message" class="form-message hidden"></div>
+    <h2>Edit Profile</h2>
+    <div id="edit-form-message" class="form-message hidden"></div>
+    <label for="edit-firstname">First Name:</label>
+    <input type="text" id="edit-firstname" /><br>
+  
+    <label for="edit-middlename">Middle Name:</label>
+    <input type="text" id="edit-middlename" /><br>
+  
+    <label for="edit-lastname">Last Name:</label>
+    <input type="text" id="edit-lastname" /><br>
+  
+    <label for="edit-email">Email:</label>
+    <input type="email" id="edit-email" /><br>
+  
+    <label for="edit-phone">Phone Number:</label>
+    <input type="tel" id="edit-phone" placeholder="123-456-7890"
+           pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" /><br>
+    
+    <label for="edit-birthdate">Birthdate:</label>
+    <input type="date" id="edit-birthdate" disabled /><br>
+  
+    <label for="edit-gender">Gender:</label>
+    <select id="edit-gender">
+      <option value="" disabled selected hidden>Select</option>
+      <option value="Male">Male</option>
+      <option value="Female">Female</option>
+      <option value="Choose not to answer">Choose not to answer</option>
+    </select><br>
+  
+    <label for="edit-city">City:</label>
+    <input type="text" id="edit-city" /><br>
+  
+    <label for="edit-state">State/Province:</label>
+    <input type="text" id="edit-state" /><br>
+  
+    <label for="edit-zip">ZIP/Postal Code:</label>
+    <input type="text" id="edit-zip" /><br>
+  
+    <button id="save-btn">Save</button>
+  </div>
+</body>
+</html>
+  

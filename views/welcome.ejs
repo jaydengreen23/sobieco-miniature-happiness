@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome</title>
+    <link rel="stylesheet" href="styles/styles.css">
+</head>
+<body>
+    <div id="profile-display" class="">
+        <h2>Welcome, <%=profile.firstname %> <%=profile.lastname %>!</h2>
+        <button id="edit-btn">Edit Profile</button><br><br>
+        
+        <% if (registration) { %>
+            <!-- Restration Info -->
+          <button id="edit-registration-btn">Edit Registration</button>
+        <% } else { %>
+          <button id="start-registration-btn">Start Registration</button>
+        <% } %><br><br>
+        <button id="delete-btn">Delete Profile</button><br><br>
+      </div>
+      <!-- <script src="scripts/scripts.js"></script> -->
+</body>
+</html>
